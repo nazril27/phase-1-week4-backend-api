@@ -1,4 +1,4 @@
-import { jwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as jwtStrategy, ExtractJwt } from 'passport-jwt';
 import config from './config.js';
 import tokenTypes from './tokens.js';
 import { prisma } from '../../prisma/prisma.ts';
