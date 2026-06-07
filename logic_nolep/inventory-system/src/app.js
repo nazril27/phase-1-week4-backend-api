@@ -5,6 +5,12 @@ import morgan from './config/morgan.js';
 import { errorConverter, errorHandler } from './middlewares/error.js';
 import ApiError from './utils/ApiError.js';
 import { status } from 'http-status';
+import helmet from 'helmet';
+import xss from 'xss-clean';
+import compression from 'compression';
+import cors from 'cors';
+import { jwtStrategy } from './config/passport.js';
+import passport from 'passport';
 
 const app = express();
 
@@ -13,9 +19,21 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
+app.use(helmet());
+
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use(xss());
+
+app.use(compression());
+
+app.use(cors());
+app.options('*', cors());   
+
+app.use(passport.initialize());
+passport.use('jwt', jwtStrategy);
 
 // app.use('/api', router);
 
