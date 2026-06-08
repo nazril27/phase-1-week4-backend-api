@@ -3,32 +3,6 @@ import { prisma } from '../prisma/prisma.ts';
 import config from './config/config.js';
 import logger from './config/logger.js';
 
-// const startServer = async () => {
-//   try {
-//     await prisma.$connect();
-//     console.log("Connected to Database");
-
-//     app.listen(port, () => {
-//       console.log(`Listening on port ${port}`);
-//     });
-//   } catch (error) {
-//     console.error("Failed to connect to database:", error);
-//     process.exit(1);
-//   }
-// };
-
-// process.on("SIGINT", async () => {
-//   await prisma.$disconnect();
-//   process.exit(0);
-// });
-
-// process.on("SIGTERM", async () => {
-//   await prisma.$disconnect();
-//   process.exit(0);
-// });
-
-// startServer();
-
 let server;
 
 if (prisma) {

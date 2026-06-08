@@ -35,7 +35,7 @@ const errorConverter = (err, req, res, next) => {
 
     } else {
 
-        const statusCode = error.statusCode;
+        const statusCode = error.statusCode || status.INTERNAL_SERVER_ERROR;
         const message = error.message || status[statusCode];
         error = new ApiError(statusCode, message, false, err.stack);
 

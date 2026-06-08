@@ -4,7 +4,7 @@ import jest from 'eslint-plugin-jest';
 import security from 'eslint-plugin-security';
 
 export default [
-    {
+  {
     files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
