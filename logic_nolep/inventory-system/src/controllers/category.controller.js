@@ -1,6 +1,5 @@
 import { status } from 'http-status';
 import catchAsync from '../utils/catchAsync';
-import ApiError from '../utils/ApiError';
 import { categoryService } from '../service';
 
 const createCategory = catchAsync(async (req, res) => {
@@ -25,9 +24,6 @@ const getCategories = catchAsync(async (req, res) => {
 
 const getCategory = catchAsync(async (req, res) => {
   const category = await categoryService.getCategoryById(req.params.categoryId);
-  if (!category) {
-    throw new ApiError(status.NOT_FOUND, 'Category not found');
-  }
 
   res.status(status.OK).send({
     status: status.OK,

@@ -28,11 +28,17 @@ const queryCategories = async (filter, options) => {
  * @returns {promise<category>}
  */
 const getCategoryById = async (id) => {
-  return prisma.category.findFirst({
+  const category = await prisma.category.findFirst({
     where: {
       id: id
     }
-  })
+  });
+
+  if (!category) {
+    throw new ApiError(status.NOT_FOUND, 'Category not found');
+  }
+
+  return category;
 };
 
 /**

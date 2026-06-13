@@ -7,7 +7,7 @@ import { prisma } from '../../prisma/prisma.ts';
  * @param {Object} productBody
  * @returns {Promise<Product>}
  */
-const createProduct = async (productBody) => {
+export const createProduct = async (productBody) => {
   return prisma.product.create({
     data: productBody
   });
@@ -17,7 +17,7 @@ const createProduct = async (productBody) => {
  * Get products
  * @returns {Promise<Products>}
  */
-const getProducts = async () => {
+export const getProducts = async () => {
   const products = await prisma.product.findMany();
   return products;
 }
@@ -27,7 +27,7 @@ const getProducts = async () => {
  * @param {ObjectId} productId
  * @returns {Promise<Product>} 
  */
-const getProductById = async (productId) => {
+export const getProductById = async (productId) => {
   return await prisma.product.findFirst({
     where: {
       id: productId
@@ -41,7 +41,7 @@ const getProductById = async (productId) => {
  * @param {Object} updateBody
  * @returns {Promise<Product>}
  */
-const updateProductById = async (productId, updateBody) => {
+export const updateProductById = async (productId, updateBody) => {
   const product = await getProductById(productId);
   if (!product) {
     throw new ApiError(status.NOT_FOUND, 'Product not found');
@@ -62,7 +62,7 @@ const updateProductById = async (productId, updateBody) => {
  * @param {ObjectId} productId
  * @returns {Promise<Product>}
  */
-const deleteProductById = async (productId) => {
+export const deleteProductById = async (productId) => {
   const product = await getProductById(productId);
   if (!product) {
     throw new ApiError(status.NOT_FOUND, 'Product not found');

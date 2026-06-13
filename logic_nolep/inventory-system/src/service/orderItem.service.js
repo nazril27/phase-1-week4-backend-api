@@ -7,7 +7,7 @@ import ApiError from '../utils/ApiError.js';
  * @param {Object} orderItemBody
  * @returns {Promise<OrderItem>}
  */
-const createOrderItem = async (orderItemBody) => {
+export const createOrderItem = async (orderItemBody) => {
   const orderItem = await prisma.orderItem.create({
     data: orderItemBody
   });
@@ -19,7 +19,7 @@ const createOrderItem = async (orderItemBody) => {
  * Get orderItems
  * @returns {Promise<OrderItems>}
  */
-const getOrderItems = async () => {
+export const getOrderItems = async () => {
   return await prisma.orderItem.findMany();
 };
 
@@ -28,7 +28,7 @@ const getOrderItems = async () => {
  * @param {Object} orderItemId
  * @returns {Promise<OrderItem>}
  */
-const getOrderItemById = async (orderItemId) => {
+export const getOrderItemById = async (orderItemId) => {
   const orderItem = await prisma.orderItem.findFirst({
     where: {
       id: orderItemId
@@ -44,7 +44,7 @@ const getOrderItemById = async (orderItemId) => {
  * @param {Object} updateBody
  * @returns {Promise<OrderItem>}
  */
-const updateOrderItemById = async (orderItemId, updateBody) => {
+export const updateOrderItemById = async (orderItemId, updateBody) => {
   const orderItem = await getOrderItemById(orderItemId);
   if (!orderItem) {
     throw new ApiError(status.NOT_FOUND, 'OrderItem not found');
@@ -65,7 +65,7 @@ const updateOrderItemById = async (orderItemId, updateBody) => {
  * @param {Object} orderItemId
  * @returns {Promise<OrderItem>}
  */
-const deleteOrderItemById = async (orderItemId) => {
+export const deleteOrderItemById = async (orderItemId) => {
   const orderItem = await getOrderItemById(orderItemId);
   if (!orderItem) {
     throw new ApiError(status.NOT_FOUND, 'OrderItem not found');
