@@ -4,7 +4,7 @@ import { objectId, password } from './custom.validation';
 const createUser = {
   body: Joi.object().keys({
     name: Joi.string().required(),
-    email: Joi.email().required(),
+    email: Joi.string().email().required(),
     password: Joi.string().custom(password).required(),
     role: Joi.string().valid('user', 'admin').default('user')
   }),
