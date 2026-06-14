@@ -22,7 +22,14 @@ const login = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
+const logout = catchAsync(async (req, res) => {
+  const { refreshToken } = req.body;
+  await tokenService.revokeToken(refreshToken, 'refresh');
+  res.status(status.NO_CONTENT).send();
+});
+
 export default {
   register,
-  login
+  login,
+  logout,
 };

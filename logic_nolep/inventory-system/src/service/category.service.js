@@ -1,5 +1,5 @@
 import { status } from 'http-status';
-import { prisma } from '../../prisma/prisma.ts';
+import { prisma } from '../../prisma/';
 import ApiError from '../utils/ApiError.js';
 
 /**

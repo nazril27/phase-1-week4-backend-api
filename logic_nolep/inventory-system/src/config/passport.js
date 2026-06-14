@@ -1,7 +1,7 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import config from './config.js';
 import tokenTypes from './tokens.js';
-import { prisma } from '../../prisma/prisma.ts';
+import { prisma } from '../../prisma/';
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,

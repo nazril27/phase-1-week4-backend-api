@@ -1,6 +1,6 @@
 import express from 'express';
-import auth from '../../middlewares/auth';
-import validate from '../../middlewares/validate';
+import auth from '../../middlewares/auth.js';
+import validate from '../../middlewares/validate.js';
 import * as productController from '../../controllers/product.controller.js';
 import { productValidation } from '../../validations/'
 
@@ -12,9 +12,17 @@ router
   .get(auth(), productController.getProducts);
 
 router
+  .route('/users/:userId/products')
+  .get(auth(), validate(productValidation.getProduct), productController.getProductsByUser);
+
+router
+  .route('/search')
+  .get(auth(), productController.searchProducts);
+
+router
   .route('/:productId')
   .get(auth(), validate(productValidation.getProduct), productController.getProductById)
   .patch(auth(), validate(productValidation.updateProduct), productController.updateProduct)
   .delete(auth(), validate(productValidation.deleteProduct), productController.deleteProduct);
 
-  export default router;
+export default router;

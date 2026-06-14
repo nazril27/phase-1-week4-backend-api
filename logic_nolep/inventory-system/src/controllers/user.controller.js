@@ -2,13 +2,25 @@ import { userService } from '../service';
 import { status } from 'http-status';
 import catchAsync from "../utils/catchAsync";
 
+export const createUser = catchAsync(async (req, res) => {
+  const user = await userService.createUser(req.body);
+
+  res.status(status.CREATED).send({
+    status: status.CREATED,
+    message: 'Create user success',
+    data: user
+  });
+});
+
 export const getUsers = catchAsync(async (req, res) => {
-  const users = await userService.getUsers();
+  const { page, size } = req.query;
+  const result = await userService.getUsers(page, size);
 
   res.status(status.OK).send({
     status: status.OK,
     message: 'Get users success',
-    data: users
+    data: result.data,
+    meta: result.meta,
   });
 });
 
@@ -23,7 +35,7 @@ export const getUserById = catchAsync(async (req, res) => {
 });
 
 export const getUserByEmail = catchAsync(async (req, res) => {
-  const user = await userService.getUserByEmail(req.params.userId);
+  const user = await userService.getUserByEmail(req.params.userEmail);
 
   res.status(status.OK).send({
     status: status.OK,

@@ -13,12 +13,14 @@ export const createOrderItem = catchAsync(async (req, res) => {
 });
 
 export const getOrderItems = catchAsync(async (req, res) => {
-  const orderItems = await orderItemService.getOrderItems();
+  const { page, size } = req.query;
+  const result = await orderItemService.getOrderItems(page, size);
 
   res.status(status.OK).send({
     status: status.OK,
     message: 'Get orderItems success',
-    data: orderItems
+    data: result.data,
+    meta: result.meta,
   });
 });
 
@@ -50,4 +52,16 @@ export const deleteOrderItem = catchAsync(async (req, res) => {
     message: 'Delete orderItem success',
     data: null
   });
-})
+});
+
+export const getOrderItemsByOrders = catchAsync(async (req, res) => {
+  const { page, size } = req.query;
+  const result = await orderItemService.getOrderItemsByOrders(req.params.orderId, page, size);
+
+  res.status(status.OK).send({
+    status: status.OK,
+    message: 'Get orderItems by order success',
+    data: result.data,
+    meta: result.meta,
+  });
+});

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import config from '../config/config.js';
 import moment from 'moment';
 import tokenTypes from '../config/tokens.js';
-import { prisma } from '../../prisma/prisma.ts';
+import { prisma } from '../../prisma/';
 
 /**
  * Generate token
@@ -62,6 +62,14 @@ const verifyToken = async (token, type) => {
   return tokenDoc;
 }
 
+const revokeToken = async (token, type) => {
+  const tokenDoc = await verifyToken(token, type);
+  return prisma.token.update({
+    where: { id: tokenDoc.id },
+    data: { blacklisted: true },
+  });
+};
+
 /**
  * Generate auth tokens
  * @param {User} user
@@ -91,5 +99,6 @@ export default {
   generateToken,
   saveToken,
   verifyToken,
+  revokeToken,
   generateAuthTokens,
 };

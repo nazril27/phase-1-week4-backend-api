@@ -1,6 +1,6 @@
 import { status } from 'http-status';
 import ApiError from '../utils/ApiError';
-import { prisma } from '../../prisma/prisma.ts';
+import { prisma } from '../../prisma/';
 
 /**
  * Create a product
@@ -17,9 +17,22 @@ export const createProduct = async (productBody) => {
  * Get products
  * @returns {Promise<Products>}
  */
-export const getProducts = async () => {
-  const products = await prisma.product.findMany();
-  return products;
+export const getProducts = async (page = 1, size = 10) => {
+  const take = Number(size) > 0 ? Number(size) : 10;
+  const currentPage = Number(page) > 0 ? Number(page) : 1;
+  const skip = (currentPage - 1) * take;
+
+  const [total, products] = await Promise.all([
+    prisma.product.count(),
+    prisma.product.findMany({ skip, take }),
+  ]);
+
+  const totalPages = Math.ceil(total / take) || 1;
+
+  return {
+    data: products,
+    meta: { page: currentPage, size: take, total, totalPages },
+  };
 }
 
 /**
@@ -28,11 +41,17 @@ export const getProducts = async () => {
  * @returns {Promise<Product>} 
  */
 export const getProductById = async (productId) => {
-  return await prisma.product.findFirst({
+  const product =  await prisma.product.findFirst({
     where: {
       id: productId
     }
   });
+
+  if (!product) {
+    throw new ApiError(status.NOT_FOUND, 'Prouduct not found');
+  }
+
+  return product;
 };
 
 /**
@@ -76,3 +95,58 @@ export const deleteProductById = async (productId) => {
 
   return deleteProduct;
 }
+
+/**
+ * Get products by email
+ * @param {ObjectId} userId 
+ * @returns {Promise<Products>}
+ */
+export const getProductsByUser = async (userId, page = 1, size = 10) => {
+  const take = Number(size) > 0 ? Number(size) : 10;
+  const currentPage = Number(page) > 0 ? Number(page) : 1;
+  const skip = (currentPage - 1) * take;
+
+  const where = { userId };
+
+  const [total, products] = await Promise.all([
+    prisma.product.count({ where }),
+    prisma.product.findMany({ where, skip, take }),
+  ]);
+
+  const totalPages = Math.ceil(total / take) || 1;
+
+  if (!products) {
+    throw new ApiError(status.NOT_FOUND, 'Products not found');
+  }
+
+  return { data: products, meta: { page: currentPage, size: take, total, totalPages } };
+};
+
+/**
+ * Search products by category name (text search)
+ * @param {string} categoryName
+ * @returns {Promise<Products>}
+ */
+export const searchProductsByCategory = async (categoryName = '', page = 1, size = 10) => {
+  const take = Number(size) > 0 ? Number(size) : 10;
+  const currentPage = Number(page) > 0 ? Number(page) : 1;
+  const skip = (currentPage - 1) * take;
+
+  const where = {
+    category: {
+      name: {
+        contains: categoryName,
+        mode: 'insensitive',
+      },
+    },
+  };
+
+  const [total, products] = await Promise.all([
+    prisma.product.count({ where }),
+    prisma.product.findMany({ where, skip, take }),
+  ]);
+
+  const totalPages = Math.ceil(total / take) || 1;
+
+  return { data: products, meta: { page: currentPage, size: take, total, totalPages } };
+};

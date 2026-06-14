@@ -1,5 +1,5 @@
 import app from './app.js';
-import { prisma } from '../prisma/prisma.ts';
+import { prisma } from '../prisma/';
 import config from './config/config.js';
 import logger from './config/logger.js';
 

@@ -1,5 +1,5 @@
 import { status } from 'http-status';
-import { prisma } from '../../prisma/prisma.ts';
+import { prisma } from '../../prisma/';
 import ApiError from '../utils/ApiError';
 import bcrypt from 'bcryptjs';
 
@@ -28,11 +28,32 @@ const getUserByEmail = async (email) => {
 };
 
 /**
- * Get all user
- * @returns {Promise<Users>}
+ * Get users with optional pagination
+ * @param {number} page
+ * @param {number} size
+ * @returns {Promise<{data: User[], meta: Object}>}
  */
-const getUsers = async () => {
-  return await prisma.user.findMany();
+const getUsers = async (page = 1, size = 10) => {
+  const take = Number(size) > 0 ? Number(size) : 10;
+  const currentPage = Number(page) > 0 ? Number(page) : 1;
+  const skip = (currentPage - 1) * take;
+
+  const [total, users] = await Promise.all([
+    prisma.user.count(),
+    prisma.user.findMany({ skip, take }),
+  ]);
+
+  const totalPages = Math.ceil(total / take) || 1;
+
+  return {
+    data: users,
+    meta: {
+      page: currentPage,
+      size: take,
+      total,
+      totalPages,
+    },
+  };
 }
 
 /**
