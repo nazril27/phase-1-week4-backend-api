@@ -12,13 +12,17 @@ const register = catchAsync(async (req, res) => {
 
   const userCreated = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(userCreated);
-  res.status(status.CREATED).send({ userCreated, tokens });
+
+  res.status(status.CREATED).send({ user: userCreated, tokens });
 });
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
+
+  delete user.password;
+
   res.send({ user, tokens });
 });
 

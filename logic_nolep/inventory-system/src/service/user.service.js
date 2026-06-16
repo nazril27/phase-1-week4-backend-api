@@ -1,5 +1,5 @@
 import { status } from 'http-status';
-import { prisma } from '../../prisma/';
+import { prisma } from '../../prisma/index.ts';
 import ApiError from '../utils/ApiError';
 import bcrypt from 'bcryptjs';
 
@@ -11,9 +11,13 @@ import bcrypt from 'bcryptjs';
 const createUser = async (userBody) => {
   userBody.password = bcrypt.hashSync(userBody.password, 8);
 
-  return prisma.user.create({
+  const user = await prisma.user.create({
     data: userBody
   });
+
+  delete user.password;
+
+  return user;
 };
 
 /**

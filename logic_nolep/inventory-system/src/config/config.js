@@ -2,10 +2,10 @@ import dotenv from 'dotenv';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const currentFileName = fileURLToPath(import.meta.url);
+const currentDirName = dirname(currentFileName);
 
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+dotenv.config({ path: path.join(currentDirName, '../../.env') });
 
 export default {
   env: process.env.NODE_ENV,
